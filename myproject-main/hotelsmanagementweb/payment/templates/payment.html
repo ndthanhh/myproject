@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f6f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #3366ff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #1a2b50;
+            font-size: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3366ff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #003DFC;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0028b3;
+            transform: translateY(-2px);
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 5px;
+            display: none;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            input {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+
+            input {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            button {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Payment Details</h1>
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="amount">Amount (VND)</label>
+                <input type="number" id="amount" name="amount" required min="0" step="1000">
+                <div class="error" id="amountError"></div>
+            </div>
+            <div class="form-group">
+                <label for="orderInfo">Order Information</label>
+                <input type="text" id="orderInfo" name="orderInfo" required>
+                <div class="error" id="orderInfoError"></div>
+            </div>
+            <button type="submit">Pay with VNPay</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const amount = document.getElementById('amount').value;
+            const orderInfo = document.getElementById('orderInfo').value;
+
+            try {
+                const response = await fetch('/create_payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: parseFloat(amount),
+                        order_info: orderInfo
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = data.payment_url;
+                } else {
+                    alert('Error creating payment: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

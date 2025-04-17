@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaNoiBooking.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <!-- dùng normalize để rest css -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <link rel="stylesheet" type="text/css" href="../css/booking.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header__logo">
+            <h1 class="logo">
+                <span class="logo-light">HaNoi</span><span class="logo-bold">Booking.</span>
+            </h1>
+        </div>
+        <div class="header__line"></div>
+        <h2 class="booking__title">Booking Information</h2>
+        <p class="booking__subtitle">Please fill up the blank fields below</p>
+    </header>
+    <main class="booking">
+        <!-- thẻ main dùng để sử dụng xác định nội dung chính của tài liệu web -->
+        <div class="booking__container">
+            <div class="booking__image">
+                <img src="../assets/image/booking/f37b774fd4d482b27e82021a4f862ae6.jpg" alt="Blue Origin Fams">
+                <p class="booking_location">Blue Origin Fams <br> Galle, Gri Lanka</p>
+            </div>
+
+            <div class="booking__form">
+                <div class="booking__days">
+                    <label>How long will you stay?</label>
+                    <div class="booking__counter">
+                        <button id="decreaseDays" class="icon icon__btn--de">-</button>
+                        <span id="days">2</span> Days
+                        <button id="increaseDays" class="icon icon__btn--in">+</button>
+                    </div>
+                </div>
+
+                <div class="booking__rooms">
+                    <label>Number of Rooms:</label>
+                    <div class="booking__counter">
+                        <button id="decreaseRooms" class="icon icon__btn--de">-</button>
+                        <span id="rooms">1</span> Room
+                        <button id="increaseRooms" class="icon icon__btn--in">+</button>
+                    </div>
+                </div>
+
+                <div class="booking__date">
+                    <label>Pick a Date</label>
+                    <br>
+                    <input type="date" id="startDate" class="input input__date">
+                </div>
+
+                <p class="booking__price">
+                    <span class="text-light">You will pay</span>
+                    <strong id="totalPrice">$400 USD</strong>
+                    <br> <!-- Xuống dòng -->
+                    <span class="text-light">per</span>
+                    <span id="totalDays">2 Days</span>
+                </p>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="footer">
+        <button class="buttons buttons--book" id="BookNow">Book Now</button>
+        <button class="buttons buttons--cancel">Cancel</button>
+    </div>
+
+
+    <script>
+        // đảm bảo mã js chỉ chạy khi toàn bộ html đc tải xong
+        document.addEventListener("DOMContentLoaded", function () {
+            let days = 2;
+            let rooms = 1;
+            const pricePerDay = 200;
+
+            const daysElement = document.getElementById("days");
+            const roomsElement = document.getElementById("rooms");
+            // lấy phần tử HTML có id là day trả về đối tượng DOMDOM                
+            const totalDaysElement = document.getElementById("totalDays");
+            const totalPriceElement = document.getElementById("totalPrice");
+
+            document.getElementById("increaseDays").addEventListener("click", function () {
+                days++;
+                updateBookingInfo();
+            });
+
+            document.getElementById("decreaseDays").addEventListener("click", function () {
+                if (days > 1) {
+                    days--;
+                    updateBookingInfo();
+                }
+            });
+
+            document.getElementById("increaseRooms").addEventListener("click", function () {
+                rooms++;
+                updateBookingInfo();
+            });
+
+            document.getElementById("decreaseRooms").addEventListener("click", function () {
+                if (rooms > 1) {
+                    rooms--;
+                    updateBookingInfo();
+                }
+            });
+
+            document.getElementById("startDate").addEventListener("change", function (event) {
+                const startDate = new Date(event.target.value);
+                // chuyển chuỗi thành ngày
+                if (!isNaN(startDate.getTime())) {
+                    const endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate() + days);
+                    updateBookingInfo();
+                }
+            });
+
+            function updateBookingInfo() {
+                daysElement.innerText = days;
+                roomsElement.innerText = rooms;
+                totalDaysElement.innerText = `${days} Days`;
+                totalPriceElement.innerHTML = `$${days * rooms * pricePerDay} USD`;
+            }
+        });
+    </script>
+</body>
+
+</html>

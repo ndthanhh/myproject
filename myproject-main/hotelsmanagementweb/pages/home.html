@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ha Noi Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <!-- dùng normalize để rest css -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/base.css">
+    <link rel="stylesheet" type="text/css" href="../css/home.css">
+
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">
+            <span class="logo-light">HaNoi</span><span class="logo-bold">Booking.</span>
+        </div>
+
+        <ul class="nav">
+            <li>About Us</li>
+            <li>Contact Us</li>
+            <li>My booking</li>
+            <button class="btn-login">Login</button>
+        </ul>
+    </div>
+
+    <div class="header__line"></div>
+
+    <div class="main">
+        <div class="main__intro">
+            <div class="slogan" style="text-align: left;">Luxury redefined, simply booked</div>
+
+            <div class="intro__content" style="text-align: left">We provide what you need to enjoy your holiday with
+                family. Time to make another memorable moments.</div>
+
+            <button class="btn-book">BookNow!</button>
+
+            <div class="item">
+                <div class="item1">
+                    <img src="../assets/image/home/ic_cities 1.png">
+                    <span class="num">100</span><span class="title"> cities</span>
+                </div>
+
+                <div class="item2">
+                    <img src="../assets/image/home/ic_treasure 1.png">
+                    <span class="num">200</span>
+                    <spa class="title"> treasure</spa>
+                </div>
+
+                <div class="item3">
+                    <img src="../assets/image/home/ic_traveler (1) 1.png">
+                    <span class="num">5000</span><span class="title"> user</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main__image"></div>
+    </div>
+
+    <div class="search">
+        <div class="search-item">
+            <label>Location</label>
+            <select class="search-input" id="location">
+                <option value="">Select location</option>
+                <option value="hanoi">Ha Noi</option>
+                <option value="hue">Hue</option>
+                <option value="danang">Da Nang</option>
+                <option value="hochiminh">Ho Chi Minh</option>
+                <option value="dalat">Da Lat</option>
+            </select>
+        </div>
+
+        <div class="search-item">
+            <label>Check-in</label>
+            <input type="date" class="search-input" id="checkin">
+        </div>
+
+        <div class="search-item">
+            <label>Check-out</label>
+            <input type="date" class="search-input" id="checkout">
+        </div>
+
+        <div class="search-item">
+            <label>Person</label>
+            <select class="search-input" id="person">
+                <option value="2">2 Person</option>
+                <option value="3">3 Person</option>
+                <option value="4">4 Person</option>
+                <option value="5">5 Person</option>
+                <option value="6">6 Person</option>
+                <option value="7">7 Person</option>
+                <option value="8">8 Person</option>
+                <option value="9">9 Person</option>
+                <option value="10">10 Person</option>
+            </select>
+        </div>
+
+        <button class="search-btn">Search</button>
+    </div>
+
+    <div class="card">
+        <div class="title__card">
+            <h2 class="title__card-content">Most Picked</h2>
+        </div>
+
+        <div class="card__img">
+            <div onclick="window.location.href='../pages/detailroom.html'" class="card__img1">
+                <div class="price__tag">
+                    <span class="price__tag-bold">$50</span><span class="'price__tag-light">per night</span>
+                </div>
+                <div class="card-info">
+                    <h3>Blue Origin Fams</h3>
+                    <p>Galle, Sri Lanka</p>
+                </div>
+            </div>
+
+            <div class="card__img2">
+                <div class="card__img2-top">
+                    <div class="price__tag">
+                        <span class="price__tag-bold">$22 </span><span class="'price__tag-light">per night</span>
+                    </div>
+                    <div class="card-info">
+                        <h3>Ocean Land</h3>
+                        <p>Trincomalee, Sri Lanka</p>
+                    </div>
+                </div>
+
+                <div class="card__img2-bottom">
+                    <div class="price__tag">
+                        <span class="price__tag-bold">$62 </span><span class="'price__tag-light">per night</span>
+                    </div>
+                    <div class="card-info">
+                        <h3>Vinna Vill</h3>
+                        <p>Beruwala, Sri Lanka</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card__img3">
+                <div class="card__img3-top">
+                    <div class="price__tag">
+                        <span class="price__tag-bold">$856 </span><span class="'price__tag-light">per night</span>
+                    </div>
+                    <div class="card-info">
+                        <h3>Stark House</h3>
+                        <p>Dehiwala, Sri Lanka</p>
+                    </div>
+                </div>
+
+                <div class="card__img3-bottom">
+                    <div class="price__tag">
+                        <span class="price__tag-bold">$72 </span><span class="'price__tag-light">per night</span>
+                    </div>
+                    <div class="card-info">
+                        <h3>Bobox</h3>
+                        <p>Kandy, Sri Lanka</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="listroom">
+        <div class="listroom1">
+            <div class="listroom__card1">
+                <div class="listroom__card-img1"></div>
+                <h3 class="name_location">Shangri-La</h3>
+                <p class="location">Colombo, Sri Lanka</p>
+            </div>
+
+            <div class="listroom__card2">
+                <div class="listroom__card-img2"></div>
+                <h3 class="name_location">Top View</h3>
+                <p class="location">Hikkaduwe, Sri Lanka</p>
+            </div>
+
+            <div class="listroom__card3">
+                <div class="listroom__card-img3"></div>
+                <h3 class="name_location">Green Villa</h3>
+                <p class="location">Kandy, Sri Lanka</p>
+            </div>
+
+            <div class="listroom__card4">
+                <div class="listroom__card-img4"></div>
+                <h3 class="name_location">Wodden Pit</h3>
+                <p class="location">Ambalangode, Sri Lanka</p>
+            </div>
+        </div>
+
+        <div class="listroom2">
+            <div class="listroom__card5">
+                <div class="listroom__card-img5"></div>
+                <h3 class="name_location">Boutique</h3>
+                <p class="location">Kandy, Sri Lanka</p>
+            </div>
+
+            <div class="listroom__card6">
+                <div class="listroom__card-img6"></div>
+                <h3 class="name_location">Modern</h3>
+                <p class="location">Nuwereliya, Sri Lanka</p>
+            </div>
+
+            <div class="listroom__card7">
+                <div class="listroom__card-img7"></div>
+                <h3 class="name_location">Sliver Rain</h3>
+                <p class="location">Dehiwala, Sri Lanka</p>
+            </div>
+
+            <div class="listroom__card8">
+                <div class="listroom__card-img8"></div>
+                <h3 class="name_location">Cashville</h3>
+                <p class="location">Ampara, Sri Lanka</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer__line"></div>
+
+    <div class="footer">
+        <div class="footer__logo">
+            <h1 class="logo1">
+                <span class="logo-light">HaNoi</span><span class="logo-bold">Booking.</span>
+                <p class="title__logo">We kaboom your beauty holiday instantly and memorable.</p>
+            </h1>
+        </div>
+        <div class="register">
+            <h2 class="title__res">Become hotel Owner</h2>
+            <div class="register-btn">
+                <a href="../pages/register.html">
+                    <button class="btn__register">Register Now</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <!-- dùng normalize để rest css -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <title>HaNoiBooking.</title>
+    <link rel="stylesheet" href="../css/register.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .alert-error {
+            background-color: #ffe6e6;
+            color: #ff0000;
+            border: 1px solid #ffcccc;
+        }
+
+        .alert-success {
+            background-color: #e6ffe6;
+            color: #008000;
+            border: 1px solid #ccffcc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logo">
+        <div class="overlay">
+            <h1 class="brand">
+                <span class="logo-light">HaNoi</span><span class="logo-bold">Booking.</span>
+            </h1>
+        </div>
+    </div>
+    <div class="form-container">
+        <div class="form" id="registerForm">
+            <h1 class="title" style="text-align: center;">Create Account</h1>
+            <div id="messageBox"></div>
+            <form id="registrationForm" onsubmit="handleRegister(event)">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="full_name" class="input" placeholder="Enter your name" required>
+
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" class="input" placeholder="Enter your number phone" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="input" placeholder="Enter my email" required>
+
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="input" placeholder="Enter my username" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="input" placeholder="Enter my password"
+                    required>
+
+                <div class="btn-res" style="text-align: center;">
+                    <button type="submit" class="btn__res">Register</button>
+                </div>
+            </form>
+
+            <a class="login" href="#" onclick="toggleForms(event)" style="text-align: center;">Login</a>
+        </div>
+
+        <div class="form slide-right" id="loginForm">
+            <h1 class="title" style="text-align: center;">Login</h1>
+
+            <form onsubmit="handleLogin(event)">
+                <label for="loginUsername">Username:</label>
+                <input type="text" id="loginUsername" name="username" class="input" placeholder="Enter your username"
+                    required>
+
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" name="password" class="input"
+                    placeholder="Enter your password" required>
+
+                <div class="btn-res" style="text-align: center;">
+                    <button type="submit" class="btn__res">Login</button>
+                </div>
+            </form>
+
+            <a class="login" href="#" onclick="toggleForms(event)" style="text-align: center;">Register</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms(event) {
+            event.preventDefault();
+            const registerForm = document.getElementById('registerForm');
+            const loginForm = document.getElementById('loginForm');
+
+            if (loginForm.classList.contains('slide-right')) {
+                registerForm.classList.add('slide-left');
+                loginForm.classList.remove('slide-right');
+            } else {
+                loginForm.classList.add('slide-right');
+                registerForm.classList.remove('slide-left');
+            }
+        }
+
+        function showMessage(message, isError = false) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.innerHTML = `<div class="alert ${isError ? 'alert-error' : 'alert-success'}">${message}</div>`;
+            messageBox.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const form = event.target;
+
+            const formData = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                email: document.getElementById('email').value,
+                full_name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value
+            };
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                console.log('Server response:', data); // For debugging
+
+                if (data.success) {
+                    showMessage(data.message, false);
+                    // Đợi 2 giây trước khi chuyển hướng
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showMessage(data.message, true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Có lỗi xảy ra khi đăng ký!', true);
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const formData = {
+                username: document.getElementById('loginUsername').value,
+                password: document.getElementById('loginPassword').value
+            };
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                console.log('Server response:', data); // For debugging
+
+                if (data.success) {
+                    showMessage(data.message, false);
+                    // Đợi 1 giây trước khi chuyển hướng
+                    setTimeout(() => {
+                        window.location.href = data.redirect || '/';
+                    }, 1000);
+                } else {
+                    showMessage(data.message, true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Có lỗi xảy ra khi đăng nhập!', true);
+            }
+        }
+    </script>
+</body>
+
+</html>
