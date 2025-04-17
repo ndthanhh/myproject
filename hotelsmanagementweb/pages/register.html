@@ -15,6 +15,25 @@
         .hidden {
             display: none;
         }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .alert-error {
+            background-color: #ffe6e6;
+            color: #ff0000;
+            border: 1px solid #ffcccc;
+        }
+
+        .alert-success {
+            background-color: #e6ffe6;
+            color: #008000;
+            border: 1px solid #ccffcc;
+        }
     </style>
 </head>
 
@@ -29,30 +48,28 @@
     <div class="form-container">
         <div class="form" id="registerForm">
             <h1 class="title" style="text-align: center;">Create Account</h1>
-            <label for="name">Full Name:</label>
-            <!-- thẻ label dùng để tạo nhãn cho 1 phần tử nhập liệu -->
-            <input type="text" id="name" class="input" placeholder="Enter your name">
-            <!-- id name để định danh cho ô nhập liệu liên kết với label qua for name -->
-            <!-- placeholder gợi ý mờ trong ô nhập -->
+            <div id="messageBox"></div>
+            <form id="registrationForm" onsubmit="handleRegister(event)">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="full_name" class="input" placeholder="Enter your name" required>
 
-            <label for="phone">Phone Number:</label>
-            <input type="text" id="phone" class="input" placeholder="Enter your number phone">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" class="input" placeholder="Enter your number phone" required>
 
-            <label for="country">Nationality:</label>
-            <input type="text" id="country" class="input" placeholder="Enter your nationality">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" class="input" placeholder="Enter my email" required>
 
-            <label for="email">Email:</label>
-            <input type="text" id="email" class="input" placeholder="Enter my email">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="input" placeholder="Enter my username" required>
 
-            <label for="username">Username:</label>
-            <input type="text" id="username" class="input" placeholder="Enter my username">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="input" placeholder="Enter my password"
+                    required>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" class="input" placeholder="Enter my password">
-
-            <div class="btn-res" style="text-align: center;">
-                <button class="btn__res">Register</button>
-            </div>
+                <div class="btn-res" style="text-align: center;">
+                    <button type="submit" class="btn__res">Register</button>
+                </div>
+            </form>
 
             <a class="login" href="#" onclick="toggleForms(event)" style="text-align: center;">Login</a>
         </div>
@@ -60,15 +77,19 @@
         <div class="form slide-right" id="loginForm">
             <h1 class="title" style="text-align: center;">Login</h1>
 
-            <label for="loginUsername">Username:</label>
-            <input type="text" id="loginUsername" class="input" placeholder="Enter your username">
+            <form onsubmit="handleLogin(event)">
+                <label for="loginUsername">Username:</label>
+                <input type="text" id="loginUsername" name="username" class="input" placeholder="Enter your username"
+                    required>
 
-            <label for="loginPassword">Password:</label>
-            <input type="password" id="loginPassword" class="input" placeholder="Enter your password">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" name="password" class="input"
+                    placeholder="Enter your password" required>
 
-            <div class="btn-res" style="text-align: center;">
-                <button onclick="window.location.href='../pages/user.html'" class="btn__res">Login</button>
-            </div>
+                <div class="btn-res" style="text-align: center;">
+                    <button type="submit" class="btn__res">Login</button>
+                </div>
+            </form>
 
             <a class="login" href="#" onclick="toggleForms(event)" style="text-align: center;">Register</a>
         </div>
@@ -81,13 +102,91 @@
             const loginForm = document.getElementById('loginForm');
 
             if (loginForm.classList.contains('slide-right')) {
-                // Switch to login
                 registerForm.classList.add('slide-left');
                 loginForm.classList.remove('slide-right');
             } else {
-                // Switch to register
                 loginForm.classList.add('slide-right');
                 registerForm.classList.remove('slide-left');
+            }
+        }
+
+        function showMessage(message, isError = false) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.innerHTML = `<div class="alert ${isError ? 'alert-error' : 'alert-success'}">${message}</div>`;
+            messageBox.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const form = event.target;
+
+            const formData = {
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value,
+                email: document.getElementById('email').value,
+                full_name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value
+            };
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                console.log('Server response:', data); // For debugging
+
+                if (data.success) {
+                    showMessage(data.message, false);
+                    // Đợi 2 giây trước khi chuyển hướng
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showMessage(data.message, true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Có lỗi xảy ra khi đăng ký!', true);
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const formData = {
+                username: document.getElementById('loginUsername').value,
+                password: document.getElementById('loginPassword').value
+            };
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                console.log('Server response:', data); // For debugging
+
+                if (data.success) {
+                    showMessage(data.message, false);
+                    // Đợi 1 giây trước khi chuyển hướng
+                    setTimeout(() => {
+                        window.location.href = data.redirect || '/';
+                    }, 1000);
+                } else {
+                    showMessage(data.message, true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Có lỗi xảy ra khi đăng nhập!', true);
             }
         }
     </script>
