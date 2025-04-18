@@ -35,16 +35,26 @@ def login_required(f):
 def index():
     db = next(get_db())
     hotels = db.query(Hotel).all()
-    return render_template('home.html', hotels=hotels)
+    user = None
+    if 'user_id' in session:
+        user = db.query(User).filter(User.user_id == session['user_id']).first()
+    return render_template('home.html', hotels=hotels, user=user)
 
 # Route cho đăng nhập
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+        if request.is_json:
+            data = request.get_json()
+            username = data.get('username')
+            password = data.get('password')
+        else:
+            username = request.form.get('username')
+            password = request.form.get('password')
         
         if not all([username, password]):
+            if request.is_json:
+                return jsonify({'success': False, 'message': 'Vui lòng điền đầy đủ thông tin đăng nhập'})
             flash('Vui lòng điền đầy đủ thông tin đăng nhập', 'error')
             return redirect(url_for('login'))
             
@@ -53,9 +63,13 @@ def login():
         
         if user:
             session['user_id'] = user.user_id
+            if request.is_json:
+                return jsonify({'success': True, 'message': 'Đăng nhập thành công!', 'redirect': url_for('index')})
             flash('Đăng nhập thành công!', 'success')
             return redirect(url_for('index'))
         else:
+            if request.is_json:
+                return jsonify({'success': False, 'message': 'Tên đăng nhập hoặc mật khẩu không đúng'})
             flash('Tên đăng nhập hoặc mật khẩu không đúng', 'error')
             return redirect(url_for('login'))
             
@@ -65,30 +79,52 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        email = request.form.get('email')
-        full_name = request.form.get('full_name')
-        phone = request.form.get('phone')
+        if request.is_json:
+            data = request.get_json()
+            username = data.get('username')
+            password = data.get('password')
+            email = data.get('email')
+            full_name = data.get('full_name')
+            phone = data.get('phone')
+        else:
+            username = request.form.get('username')
+            password = request.form.get('password')
+            email = request.form.get('email')
+            full_name = request.form.get('full_name')
+            phone = request.form.get('phone')
+        
+        print(f"Registration attempt - Username: {username}, Email: {email}")
         
         if not all([username, password, email]):
+            if request.is_json:
+                return jsonify({'success': False, 'message': 'Vui lòng điền đầy đủ thông tin bắt buộc'})
             flash('Vui lòng điền đầy đủ thông tin bắt buộc', 'error')
             return redirect(url_for('register'))
             
         if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+            if request.is_json:
+                return jsonify({'success': False, 'message': 'Email không hợp lệ'})
             flash('Email không hợp lệ', 'error')
             return redirect(url_for('register'))
             
         db = next(get_db())
         try:
+            print("Attempting to create user...")
             user = create_user(db, username, password, email, full_name, phone)
+            print(f"User created successfully with ID: {user.user_id}")
             session['user_id'] = user.user_id
+            
+            if request.is_json:
+                return jsonify({'success': True, 'message': 'Đăng ký thành công!'})
             flash('Đăng ký thành công!', 'success')
             return redirect(url_for('index'))
         except Exception as e:
             db.rollback()
-            print(f"Error during registration: {str(e)}")  # Thêm log chi tiết
-            flash(f'Có lỗi xảy ra khi đăng ký: {str(e)}', 'error')
+            error_msg = f'Có lỗi xảy ra khi đăng ký: {str(e)}'
+            print(f"Error during registration: {str(e)}")
+            if request.is_json:
+                return jsonify({'success': False, 'message': error_msg})
+            flash(error_msg, 'error')
             return redirect(url_for('register'))
             
     return render_template('register.html')
@@ -208,6 +244,13 @@ def logout():
     session.clear()
     flash('Đã đăng xuất thành công!', 'success')
     return redirect(url_for('index'))
+
+@app.route('/user')
+@login_required
+def user_profile():
+    db = next(get_db())
+    user = db.query(User).filter(User.user_id == session['user_id']).first()
+    return render_template('user.html', user=user)
 
 if __name__ == '__main__':
     try:

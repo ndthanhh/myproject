@@ -13,7 +13,7 @@
         rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../css/base.css">
     <link rel="stylesheet" type="text/css" href="../css/home.css">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -26,7 +26,23 @@
             <li>About Us</li>
             <li>Contact Us</li>
             <li>My booking</li>
-            <button class="btn-login">Login</button>
+            {% if 'user_id' in session %}
+            <div class="user-profile-dropdown">
+                <button onclick="toggleDropdown()" class="profile-button">
+                    <img src="https://ui-avatars.com/api/?name={{ user.full_name }}&background=random" alt="Avatar">
+                    <span>{{ user.full_name }}</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div id="profileDropdown" class="dropdown-content">
+                    <a href="/user"><i class="fas fa-user"></i> Profile</a>
+                    <a href="/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="/register?showLogin=true" style="text-decoration: none;">
+                <button class="btn-login">Login</button>
+            </a>
+            {% endif %}
         </ul>
     </div>
 
@@ -238,8 +254,25 @@
             </div>
         </div>
     </div>
-</body>
 
-</html>
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById("profileDropdown");
+            dropdown.classList.toggle("show");
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.profile-button') && !event.target.matches('.profile-button *')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                for (let dropdown of dropdowns) {
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
 
 </html>
