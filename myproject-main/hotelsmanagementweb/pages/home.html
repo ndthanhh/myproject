@@ -126,113 +126,157 @@
         </div>
 
         <div class="card__img">
-            <div onclick="window.location.href='../pages/detailroom.html'" class="card__img1">
+            {% if most_picked_hotels|length >= 1 %}
+            <div onclick="window.location.href='/hotel/{{ most_picked_hotels[0].hotel_id }}'" class="card__img1"
+                style="background-image: url('{{ most_picked_hotels[0].image_url }}')">
                 <div class="price__tag">
-                    <span class="price__tag-bold">$50</span><span class="'price__tag-light">per night</span>
+                    <span class="price__tag-bold">${{ most_picked_hotels[0].price_per_night }}</span><span
+                        class="'price__tag-light">per night</span>
                 </div>
                 <div class="card-info">
-                    <h3>Blue Origin Fams</h3>
-                    <p>Galle, Sri Lanka</p>
+                    <h3>{{ most_picked_hotels[0].name }}</h3>
+                    <p>{{ most_picked_hotels[0].location }}</p>
                 </div>
             </div>
+            {% endif %}
 
             <div class="card__img2">
-                <div class="card__img2-top">
+                {% if most_picked_hotels|length >= 2 %}
+                <div onclick="window.location.href='/hotel/{{ most_picked_hotels[1].hotel_id }}'" class="card__img2-top"
+                    style="background-image: url('{{ most_picked_hotels[1].image_url }}')">
                     <div class="price__tag">
-                        <span class="price__tag-bold">$22 </span><span class="'price__tag-light">per night</span>
+                        <span class="price__tag-bold">${{ most_picked_hotels[1].price_per_night }}</span><span
+                            class="'price__tag-light">per night</span>
                     </div>
                     <div class="card-info">
-                        <h3>Ocean Land</h3>
-                        <p>Trincomalee, Sri Lanka</p>
+                        <h3>{{ most_picked_hotels[1].name }}</h3>
+                        <p>{{ most_picked_hotels[1].location }}</p>
                     </div>
                 </div>
+                {% endif %}
 
-                <div class="card__img2-bottom">
+                {% if most_picked_hotels|length >= 3 %}
+                <div onclick="window.location.href='/hotel/{{ most_picked_hotels[2].hotel_id }}'"
+                    class="card__img2-bottom" style="background-image: url('{{ most_picked_hotels[2].image_url }}')">
                     <div class="price__tag">
-                        <span class="price__tag-bold">$62 </span><span class="'price__tag-light">per night</span>
+                        <span class="price__tag-bold">${{ most_picked_hotels[2].price_per_night }}</span><span
+                            class="'price__tag-light">per night</span>
                     </div>
                     <div class="card-info">
-                        <h3>Vinna Vill</h3>
-                        <p>Beruwala, Sri Lanka</p>
+                        <h3>{{ most_picked_hotels[2].name }}</h3>
+                        <p>{{ most_picked_hotels[2].location }}</p>
                     </div>
                 </div>
+                {% endif %}
             </div>
 
             <div class="card__img3">
-                <div class="card__img3-top">
+                {% if most_picked_hotels|length >= 4 %}
+                <div onclick="window.location.href='/hotel/{{ most_picked_hotels[3].hotel_id }}'" class="card__img3-top"
+                    style="background-image: url('{{ most_picked_hotels[3].image_url }}')">
                     <div class="price__tag">
-                        <span class="price__tag-bold">$856 </span><span class="'price__tag-light">per night</span>
+                        <span class="price__tag-bold">${{ most_picked_hotels[3].price_per_night }}</span><span
+                            class="'price__tag-light">per night</span>
                     </div>
                     <div class="card-info">
-                        <h3>Stark House</h3>
-                        <p>Dehiwala, Sri Lanka</p>
+                        <h3>{{ most_picked_hotels[3].name }}</h3>
+                        <p>{{ most_picked_hotels[3].location }}</p>
                     </div>
                 </div>
+                {% endif %}
 
-                <div class="card__img3-bottom">
+                {% if most_picked_hotels|length >= 5 %}
+                <div onclick="window.location.href='/hotel/{{ most_picked_hotels[4].hotel_id }}'"
+                    class="card__img3-bottom" style="background-image: url('{{ most_picked_hotels[4].image_url }}')">
                     <div class="price__tag">
-                        <span class="price__tag-bold">$72 </span><span class="'price__tag-light">per night</span>
+                        <span class="price__tag-bold">${{ most_picked_hotels[4].price_per_night }}</span><span
+                            class="'price__tag-light">per night</span>
                     </div>
                     <div class="card-info">
-                        <h3>Bobox</h3>
-                        <p>Kandy, Sri Lanka</p>
+                        <h3>{{ most_picked_hotels[4].name }}</h3>
+                        <p>{{ most_picked_hotels[4].location }}</p>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
 
     <div class="listroom">
         <div class="listroom1">
-            <div class="listroom__card1">
-                <div class="listroom__card-img1"></div>
-                <h3 class="name_location">Shangri-La</h3>
-                <p class="location">Colombo, Sri Lanka</p>
+            {% if list_room_hotels|length >= 1 %}
+            <div class="listroom__card1" onclick="window.location.href='/hotel/{{ list_room_hotels[0].hotel_id }}'">
+                <div class="listroom__card-img1" style="background-image: url('{{ list_room_hotels[0].image_url }}')">
+                </div>
+                <h3 class="name_location">{{ list_room_hotels[0].name }}</h3>
+                <p class="location">{{ list_room_hotels[0].location }}</p>
             </div>
+            {% endif %}
 
-            <div class="listroom__card2">
-                <div class="listroom__card-img2"></div>
-                <h3 class="name_location">Top View</h3>
-                <p class="location">Hikkaduwe, Sri Lanka</p>
+            {% if list_room_hotels|length >= 2 %}
+            <div class="listroom__card2" onclick="window.location.href='/hotel/{{ list_room_hotels[1].hotel_id }}'">
+                <div class="listroom__card-img2" style="background-image: url('{{ list_room_hotels[1].image_url }}')">
+                </div>
+                <h3 class="name_location">{{ list_room_hotels[1].name }}</h3>
+                <p class="location">{{ list_room_hotels[1].location }}</p>
             </div>
+            {% endif %}
 
-            <div class="listroom__card3">
-                <div class="listroom__card-img3"></div>
-                <h3 class="name_location">Green Villa</h3>
-                <p class="location">Kandy, Sri Lanka</p>
+            {% if list_room_hotels|length >= 3 %}
+            <div class="listroom__card3" onclick="window.location.href='/hotel/{{ list_room_hotels[2].hotel_id }}'">
+                <div class="listroom__card-img3" style="background-image: url('{{ list_room_hotels[2].image_url }}')">
+                </div>
+                <h3 class="name_location">{{ list_room_hotels[2].name }}</h3>
+                <p class="location">{{ list_room_hotels[2].location }}</p>
             </div>
+            {% endif %}
 
-            <div class="listroom__card4">
-                <div class="listroom__card-img4"></div>
-                <h3 class="name_location">Wodden Pit</h3>
-                <p class="location">Ambalangode, Sri Lanka</p>
+            {% if list_room_hotels|length >= 4 %}
+            <div class="listroom__card4" onclick="window.location.href='/hotel/{{ list_room_hotels[3].hotel_id }}'">
+                <div class="listroom__card-img4" style="background-image: url('{{ list_room_hotels[3].image_url }}')">
+                </div>
+                <h3 class="name_location">{{ list_room_hotels[3].name }}</h3>
+                <p class="location">{{ list_room_hotels[3].location }}</p>
             </div>
+            {% endif %}
         </div>
 
         <div class="listroom2">
-            <div class="listroom__card5">
-                <div class="listroom__card-img5"></div>
-                <h3 class="name_location">Boutique</h3>
-                <p class="location">Kandy, Sri Lanka</p>
+            {% if list_room_hotels|length >= 5 %}
+            <div class="listroom__card5" onclick="window.location.href='/hotel/{{ list_room_hotels[4].hotel_id }}'">
+                <div class="listroom__card-img5" style="background-image: url('{{ list_room_hotels[4].image_url }}')">
+                </div>
+                <h3 class="name_location">{{ list_room_hotels[4].name }}</h3>
+                <p class="location">{{ list_room_hotels[4].location }}</p>
             </div>
+            {% endif %}
 
-            <div class="listroom__card6">
-                <div class="listroom__card-img6"></div>
-                <h3 class="name_location">Modern</h3>
-                <p class="location">Nuwereliya, Sri Lanka</p>
+            {% if list_room_hotels|length >= 6 %}
+            <div class="listroom__card6" onclick="window.location.href='/hotel/{{ list_room_hotels[5].hotel_id }}'">
+                <div class="listroom__card-img6" style="background-image: url('{{ list_room_hotels[5].image_url }}')">
+                </div>
+                <h3 class="name_location">{{ list_room_hotels[5].name }}</h3>
+                <p class="location">{{ list_room_hotels[5].location }}</p>
             </div>
+            {% endif %}
 
-            <div class="listroom__card7">
-                <div class="listroom__card-img7"></div>
-                <h3 class="name_location">Sliver Rain</h3>
-                <p class="location">Dehiwala, Sri Lanka</p>
+            {% if list_room_hotels|length >= 7 %}
+            <div class="listroom__card7" onclick="window.location.href='/hotel/{{ list_room_hotels[6].hotel_id }}'">
+                <div class="listroom__card-img7" style="background-image: url('{{ list_room_hotels[6].image_url }}')">
+                </div>
+                <h3 class="name_location">{{ list_room_hotels[6].name }}</h3>
+                <p class="location">{{ list_room_hotels[6].location }}</p>
             </div>
+            {% endif %}
 
-            <div class="listroom__card8">
-                <div class="listroom__card-img8"></div>
-                <h3 class="name_location">Cashville</h3>
-                <p class="location">Ampara, Sri Lanka</p>
+            {% if list_room_hotels|length >= 8 %}
+            <div class="listroom__card8" onclick="window.location.href='/hotel/{{ list_room_hotels[7].hotel_id }}'">
+                <div class="listroom__card-img8" style="background-image: url('{{ list_room_hotels[7].image_url }}')">
+                </div>
+                <h3 class="name_location">{{ list_room_hotels[7].name }}</h3>
+                <p class="location">{{ list_room_hotels[7].location }}</p>
             </div>
+            {% endif %}
         </div>
     </div>
 

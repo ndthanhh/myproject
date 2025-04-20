@@ -34,11 +34,50 @@ def login_required(f):
 @app.route('/')
 def index():
     db = next(get_db())
-    hotels = db.query(Hotel).all()
+    
+    # Get most picked hotels (sắp xếp theo rating)
+    most_picked_hotels = db.query(Hotel).order_by(Hotel.rating.desc()).limit(5).all()
+    
+    # Get list room hotels (lấy 8 khách sạn)
+    list_room_hotels = db.query(Hotel).limit(8).all()
+    
+    # Get main images for hotels
+    for hotel in most_picked_hotels + list_room_hotels:
+        main_image = db.execute(
+            text("SELECT image_path FROM hotel_images WHERE hotel_id = :hotel_id AND is_main = 1"),
+            {"hotel_id": hotel.hotel_id}
+        ).fetchone()
+        
+        # Xử lý đường dẫn ảnh
+        if main_image and main_image[0]:
+            image_path = main_image[0]
+            # Chuyển đổi đường dẫn tuyệt đối thành tương đối
+            if 'hotelsmanagementweb' in image_path:
+                image_path = image_path[image_path.index('hotelsmanagementweb')+len('hotelsmanagementweb'):]
+            # Đảm bảo đường dẫn bắt đầu bằng /
+            if not image_path.startswith('/'):
+                image_path = '/' + image_path
+            hotel.image_url = image_path
+        else:
+            hotel.image_url = '/assets/image/default-hotel.webp'
+        
+        # Format location to show only country and province
+        location_parts = hotel.address_hotel.split(',')
+        if len(location_parts) >= 2:
+            hotel.location = f"{location_parts[-2].strip()}, {location_parts[-1].strip()}"
+        else:
+            hotel.location = hotel.address_hotel
+            
+        hotel.name = hotel.hotel_name
+    
     user = None
     if 'user_id' in session:
         user = db.query(User).filter(User.user_id == session['user_id']).first()
-    return render_template('home.html', hotels=hotels, user=user)
+    
+    return render_template('home.html', 
+                         most_picked_hotels=most_picked_hotels,
+                         list_room_hotels=list_room_hotels,
+                         user=user)
 
 # Route cho đăng nhập
 @app.route('/login', methods=['GET', 'POST'])
