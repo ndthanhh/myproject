@@ -1,13 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>HaNoiBooking.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+
+        .booking-summary,
+        .payment-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .hotel-info {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hotel-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .hotel-details h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-details {
+            border-top: 1px solid #eee;
+            padding-top: 1.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .price-summary {
+            border-top: 1px solid #eee;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+        }
+
+        .total-price {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #e44d26;
+        }
+
+        .payment-methods {
+            margin-bottom: 2rem;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: #e44d26;
+        }
+
+        .payment-method.active {
+            border-color: #e44d26;
+            background-color: #fff5f3;
+        }
+
+        .payment-method img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #e44d26;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-pay {
+            background: #e44d26;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .btn-pay:hover {
+            background: #d93d1a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    
+    <header class="header">
+        <a href="/">
+            <img src="/static/images/logo.png" alt="Hotels Management" class="logo">
+        </a>
+    </header>
+
+    <div class="container">
+        <div class="booking-summary">
+            <h2>Booking Summary</h2>
+            <div class="hotel-info">
+                <img src="{{ hotel.image_url }}" alt="{{ hotel.name }}" class="hotel-image">
+                <div class="hotel-details">
+                    <h3>{{ hotel.name }}</h3>
+                    <p>{{ hotel.address }}</p>
+                    <p>{{ room.room_type }}</p>
+                </div>
+            </div>
+
+            <div class="booking-details">
+                <div class="detail-row">
+                    <span>Check-in</span>
+                    <span>{{ booking.check_in_date.strftime('%d %b %Y') }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Check-out</span>
+                    <span>{{ booking.check_out_date.strftime('%d %b %Y') }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Number of nights</span>
+                    <span>{{ nights }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Guests</span>
+                    <span>{{ booking.num_guests }} guests</span>
+                </div>
+            </div>
+
+            <div class="price-summary">
+                <div class="detail-row">
+                    <span>Room rate ({{ nights }} nights)</span>
+                    <span>${{ "%.2f"|format(room.price_per_night * nights) }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Taxes and fees</span>
+                    <span>${{ "%.2f"|format(booking.tax_amount) }}</span>
+                </div>
+                <div class="detail-row total-price">
+                    <span>Total Amount</span>
+                    <span>${{ "%.2f"|format(booking.total_amount) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-form">
+            <h2>Payment Details</h2>
+            <form id="paymentForm" action="{{ url_for('process_payment', booking_id=booking.id) }}" method="POST">
+                <div class="payment-methods">
+                    <div class="payment-method active" data-method="credit-card">
+                        <img src="/static/images/credit-card.png" alt="Credit Card">
+                        <div>
+                            <h4>Credit/Debit Card</h4>
+                            <p>Pay securely with your card</p>
+                        </div>
+                    </div>
+                    <div class="payment-method" data-method="bank-transfer">
+                        <img src="/static/images/bank-transfer.png" alt="Bank Transfer">
+                        <div>
+                            <h4>Bank Transfer</h4>
+                            <p>Pay via bank transfer</p>
+                        </div>
+                    </div>
+                    <div class="payment-method" data-method="momo">
+                        <img src="/static/images/momo.png" alt="MoMo">
+                        <div>
+                            <h4>MoMo</h4>
+                            <p>Pay with MoMo e-wallet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="creditCardForm">
+                    <div class="form-group">
+                        <label for="cardName">Cardholder Name</label>
+                        <input type="text" id="cardName" name="cardName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" name="cardNumber" maxlength="19" required>
+                    </div>
+                    <div class="card-details">
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" maxlength="5"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" name="cvv" maxlength="4" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-pay">Pay ${{ "%.2f"|format(booking.total_amount) }}</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Payment method selection
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const creditCardForm = document.getElementById('creditCardForm');
+
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', () => {
+                paymentMethods.forEach(m => m.classList.remove('active'));
+                method.classList.add('active');
+
+                const paymentType = method.dataset.method;
+                if (paymentType === 'credit-card') {
+                    creditCardForm.style.display = 'block';
+                } else {
+                    creditCardForm.style.display = 'none';
+                }
+            });
+        });
+
+        // Card number formatting
+        const cardNumber = document.getElementById('cardNumber');
+        cardNumber.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = value;
+        });
+
+        // Expiry date formatting
+        const expiryDate = document.getElementById('expiryDate');
+        expiryDate.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        // Form validation
+        const paymentForm = document.getElementById('paymentForm');
+        paymentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const activeMethod = document.querySelector('.payment-method.active');
+            const paymentType = activeMethod.dataset.method;
+
+            if (paymentType === 'credit-card') {
+                const cardName = document.getElementById('cardName').value;
+                const cardNum = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                const expiry = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+
+                if (!cardName || !cardNum || !expiry || !cvv) {
+                    alert('Please fill in all card details');
+                    return;
+                }
+
+                if (cardNum.length !== 16) {
+                    alert('Please enter a valid card number');
+                    return;
+                }
+
+                if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+                    alert('Please enter a valid expiry date (MM/YY)');
+                    return;
+                }
+
+                if (!/^\d{3,4}$/.test(cvv)) {
+                    alert('Please enter a valid CVV');
+                    return;
+                }
+            }
+
+            // If validation passes, submit the form
+            paymentForm.submit();
+        });
+    </script>
 </body>
+
 </html>
-
-

@@ -12,9 +12,12 @@ MYSQL_DB = "btl_csdl"
 # Tạo URL kết nối với các tham số bổ sung
 SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}?charset=utf8mb4"
 
+# Tạo alias DATABASE_URI cho SQLALCHEMY_DATABASE_URL
+DATABASE_URI = SQLALCHEMY_DATABASE_URL
+
 # Tạo engine với các tham số bổ sung
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
+    DATABASE_URI,
     pool_pre_ping=True,  # Kiểm tra kết nối trước khi sử dụng
     pool_recycle=3600,   # Tái sử dụng kết nối sau 1 giờ
     echo=True           # Hiển thị SQL queries để debug
@@ -33,3 +36,6 @@ def get_db():
         yield db
     finally:
         db.close()
+
+# Export các biến cần thiết
+__all__ = ['DATABASE_URI', 'Base', 'engine', 'get_db']
